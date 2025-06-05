@@ -1,2 +1,0 @@
-class APIGateway():
-    pass
