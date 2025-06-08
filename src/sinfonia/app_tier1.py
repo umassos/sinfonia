@@ -8,7 +8,6 @@
 
 from __future__ import annotations
 
-import signal
 import sys
 from pathlib import Path
 from uuid import UUID
@@ -125,6 +124,8 @@ def wsgi_app_factory(**args) -> connexion.FlaskApp:
     scheduler.init_app(flask_app)
     scheduler.start()
     start_expire_cloudlets_job()
+
+    # CHANGES
     start_broadcasting_job()
 
     # handle running behind reverse proxy (should this be made configurable?)

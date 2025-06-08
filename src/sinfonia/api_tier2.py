@@ -21,6 +21,7 @@ from src.sinfonia.carbon import report as carbon_report
 
 logger = get_default_logger()
 
+# CHANGES
 
 class CarbonGet(BaseModel):
     carbon_trace_timestamp: int = 0
@@ -31,6 +32,7 @@ class CarbonGet(BaseModel):
             raise ValueError('must be non-negative')
         return v
 
+# CHANGES
 
 class CarbonView(MethodView):
     def search(self):        
@@ -49,6 +51,8 @@ class CarbonView(MethodView):
         return r
 
 
+# CHANGES
+
 class CarbonTraceTimestampView(MethodView):
     def post(self):
         try:
@@ -59,16 +63,19 @@ class CarbonTraceTimestampView(MethodView):
         current_app.config['CARBON_TRACE_TIMESTAMP'] = req.carbon_trace_timestamp
         return NoContent, 200
 
+# CHANGES
 
 class LivezView(MethodView):
     def search(self):
         return NoContent, 200
     
-    
+# CHANGES
+
 class ReadyzView(MethodView):
     def search(self):
         return NoContent, 200
     
+# CHANGES
     
 class ResuView(MethodView):
     """Resource Utilization"""

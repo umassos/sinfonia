@@ -80,12 +80,13 @@ tqdm = "^4.64.1"
 [tool.poetry.scripts]
 sinfonia-tier1 = "src.sinfonia.app_tier1:cli"
 sinfonia-tier2 = "src.sinfonia.app_tier2:cli"
-tier-shell = "tier_shell.main:app"
 
 [tool.poetry.plugins."src.sinfonia.tier1_matchers"]
 network = "src.sinfonia.matchers:match_by_network"
 location = "src.sinfonia.matchers:match_by_location"
 random = "src.sinfonia.matchers:match_random"
+
+# CHANGES
 carbon-intensity = "src.sinfonia.matchers:match_carbon_intensity"
 
 [tool.black]

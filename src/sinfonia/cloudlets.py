@@ -334,6 +334,8 @@ class Cloudlet:
             summary["last_update"] = str(self.last_update)
         return summary
     
+    # CHANGES
+
     def set_carbon_trace_timestamp(self, carbon_trace_timestamp: int) -> dict:
         """Set carbon_trace_timestamp on this cloudlet"""
         

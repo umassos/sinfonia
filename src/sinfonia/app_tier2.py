@@ -22,6 +22,7 @@ from werkzeug.serving import get_interface_ip
 from yarl import URL
 from zeroconf import ServiceInfo, Zeroconf
 
+from . import  daemon_registry
 from .carbon.simulation import carbon_trace
 from .carbon.types import EnergyReportMethodType
 from .app_common import (
@@ -39,7 +40,6 @@ from .jobs import scheduler, start_expire_deployments_job, start_reporting_job
 from .openapi import load_spec
 from .geo_location import GeoLocation
 
-from src.domain import daemon_registry
 from src.domain.logger import get_default_logger
 from src.lib.time import TimeUnit
 
@@ -58,6 +58,8 @@ class Tier2DefaultConfig:
     RECIPES: str | Path | URL = "RECIPES"
     PROMETHEUS: str = "http://10.43.247.5:9090"
         
+    # CHANGES
+
     # Carbon
     CARBON_ENERGY_REPORT_PATH = './carbon-data/energy.csv'
     CARBON_ENERGY_REPORT_RESET_INTERVAL_SECONDS = TimeUnit.DAY
@@ -139,6 +141,8 @@ def tier2_app_factory(**args) -> connexion.FlaskApp:
     
     # start daemons
     
+    # CHANGES
+
     logger.info(f"Starting carbon energy daemon and creating energy report at {flask_app.config['CARBON_ENERGY_REPORT_PATH']} ...")
     daemon_registry.register(
         energy_report, 

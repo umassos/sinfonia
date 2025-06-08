@@ -120,7 +120,8 @@ def start_reporting_job():
         id="report_to_tier1",
         replace_existing=True,
     )
-    
+
+# CHANGES
 
 def broadcast_carbon_trace_timestamp_to_tier2s():
     config = scheduler.app.config
@@ -137,7 +138,9 @@ def broadcast_carbon_trace_timestamp_to_tier2s():
     # TODO
     assert scheduler.app.config["CARBON_TRACE_TIMESTAMP"] == new_timestamp
 
-    
+
+# CHANGES
+
 def start_broadcasting_job():
     config = scheduler.app.config
     if not config["CARBON_TRACE_TIMESTAMP"]:

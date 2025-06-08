@@ -51,14 +51,6 @@ FROM base AS final
 COPY --from=builder /usr/local/bin /usr/local/bin
 COPY --from=builder /venv /venv
 
-# Carbon data
-# This is purely for testing carbon replay and not a part of Sinfonia itself
-# It would be better if we pull carbon replay from an independent source, but oh well
-# COPY src/sinfonia/carbon/trace/data /app/src/sinfonia/carbon/trace/data
-
-# # kubeconfig
-# COPY deploy-tier2/k3s.yml /app/deploy-tier2/k3s.yml
-
 # Application recipes
 VOLUME ["/RECIPES"]
 ENV SINFONIA_RECIPES=/RECIPES
