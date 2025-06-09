@@ -8,7 +8,34 @@ Last commit reference from CarbonEdge: TBD
 
 This is to recap on the experiments were designed on top of Sinfonia.
 
+### Original Sinfonia
 
+Sinfonia design has 3 tiers:
+- Tier-1: Responsible for orchestrating deployment requests between Tier-3 and Tier-2. Contains logic to choose which Tier-2 to deploy application to.
+- Tier-2: Server for where applications are deployed and requests from Tier-3 routed to. After app deployment phase, Tier-3 and Tier-2 communicate directly with each other.
+- Tier-3: Edge/client server. Sits closest to the client and act as the client proxy (or the client itself). Either send deployment request to Tier-1 to start app deployment phase or pass along client requests to Tier-2 for execution.
+
+App deployment phase:
+- Tier-3 sends deployment request to Tier-1.
+- Tier-1, having knowledge of available Tier-2s (internal ledger), makes decisions based on a series of filter conditions (matchers). The remaining Tier-2s are then selected for app deployments. Their information (most importantly URLs and connection information) are returned to Tier-3, and app deployment requests are sent to those Tier-2s.
+- The Tier-2s that were selected create the app deployment.
+
+Interaction phase:
+- Tier-3, now knowing which Tier-2 machines the app was deployed on, can choose to send requests to any of them for processing.
+
+### CarbonEdge 
+
+CarbonEdge's main contribution is the matching algorithm to select Tier-2s in order to minimize carbon emission while meeting performance SLA.
+
+We wrote our own Tier-3, tied to Locust, and based on Sinfonia Tier-3 codebase, to send and monitor workload.
+
+We host our own Helm chart and carbon trace repo (from Electricity Maps) on Github.
+
+For sake of experiment, we have a global clock on Tier-1 and synced to Tier-2s.
+
+We added RAPL monitoring, which continuously polls energy consumption data. Since this is an Intel technology, our experiments can only be run on Intel-based servers.
+
+We provide and simulate geographic context to Tier-2 deployments.
 
 ## Changes from original Sinfonia
 
@@ -86,6 +113,18 @@ API endpoint on Tier-2 to update its carbon trace timestamp at src/sinfonia/api_
 
 We have a loadtest repo independent of the repository. The loadtest is acts as Tier-3, the application edge node.
 
+The loadtest generator repo is at https://github.com/k2nt/sinfonia-tier3
+
+The matrix multiplication app repo is at https://github.com/k2nt/sinfonia-loadtest-app 
+
+### Tier-2 settings
+
+We added Tier-2 geographic contexts to simulate a mesoscale cluster. The settings are embedded as Ansible inventory files located at deploy-tier2/inv.
+
+We also simulate latency to account for geographic distances. Latency is applied via the `tc` Linux command. The Ansible script to provision latency to Tier-2 machines is at deploy-tier2/latency.yml and at deploy-tier2/tasks/latency.yml and at deploy-tier2/scripts/latency.py.
+
+We also have some helper Ansible scripts such as deploy-tier2/cleanup.yml and deploy-tier2/check-tier2.yml.
+
 ## Issues
 
 These are issues I noticed.
@@ -106,6 +145,10 @@ It is currently not critical, but should be considered when publishing for open 
 Plumbum is a Python wrapper to run CLI commands. It can raise error if a program being invoked programmatically does not exist in the CLI environment. For example, we have from plumbum.cmd import helm somewhere in the codebase. If you don't have helm installed, Plumbum will raise an error.
 
 The fix is to simply install all used tool in this codebase.
+
+#### 3. RAPL in Kubernetes requires priviledged access
+
+RAPL data is a hardware-based, and is located at /sys/class/powercap/intel-rapl:*. Because RAPL data is part of the host's kernel space, Kubernetes pods requires priviledged access in order to read the data, which can be a security concern. For our usecase, I don't think this is an issue, but I just wanted to point out that this exists.
 
 ## To dos
 
