@@ -125,6 +125,8 @@ We also simulate latency to account for geographic distances. Latency is applied
 
 We also have some helper Ansible scripts such as deploy-tier2/cleanup.yml and deploy-tier2/check-tier2.yml.
 
+We have our Docker container for the modification we made on Sinfonia Tier-2 at k2nt/sinfonia-tier2:dev.101.
+
 ## Issues
 
 These are issues I noticed.
